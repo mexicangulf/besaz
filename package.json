@@ -8,6 +8,8 @@
     "build": "rollup -c && tsc",
     "preview": "vite preview"
   },
+  "types": "besaz.d.ts",
+  "main": "besaz.js",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
