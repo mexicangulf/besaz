@@ -1,0 +1,65 @@
+import type {Application} from ".";
+import type {DisplayObject} from "./display/object";
+
+export type ProgramType = "Typescript" | "WebAssembly";
+
+export class Script {
+
+    public path: string;
+    public type: ProgramType;
+    private behaviour: any = undefined;
+
+    constructor(path: string, type: ProgramType = "Typescript") {
+        
+        this.path = path;
+        this.type = type;
+
+    };
+
+    public async init(sprite: DisplayObject, onload: CallableFunction = () => {}) {
+        if(this.type == "Typescript") { 
+
+            const name = this.path.split("/").slice(-1);
+            const path = this.path.split("/").slice(0, -1).join("/");
+
+            let module;
+
+            if(path) {
+                module = await import(/* @vite-ignore */ `/behaviour/${path}/${name}`);
+            } else {
+                module = await import(/* @vite-ignore */ `/behaviour/${name}`);
+            }
+
+            this.behaviour = new module.default(sprite);
+            
+            if(onload)
+                onload();
+            
+        }
+    };
+
+    // this is an extra check that i have to get rid of
+    public update(app: Application, dt: number) {
+        if(this.behaviour !== undefined)
+            this.behaviour.update(app, dt);
+    }
+
+    public fixedUpdate(app: Application, dt: number) {
+        if(this.behaviour !== undefined)
+            this.behaviour.fixedUpdate(app, dt);
+    };
+
+    public onStart(app: Application) {
+        if(this.behaviour !== undefined)
+            this.behaviour.onStart(app);
+    };
+
+};
+
+export interface BehaviourClass {
+
+    update(app: Application, dt: number): void;
+    updateFixed(_: Application, dt: number): void;
+    onStart(app: Application): void;
+
+}
