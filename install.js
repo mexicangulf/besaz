@@ -1,6 +1,10 @@
 
 import { execSync } from "child_process";
-import { existsSync, rmSync, readdirSync, readFileSync, writeFileSync} from "fs";
+import { existsSync, rmSync, readdirSync,
+   readFileSync,
+   writeFileSync,
+   mkdirSync,
+   copyFileSync} from "fs";
 import inquirer from "inquirer";
 
 const REPO_URL = "https://github.com/mexicangulf/besaz";
@@ -68,6 +72,8 @@ async function main() {
     default: false,
   },
   ]);
+
+  
 
   if(another.removeBesazFolder) {
     if (existsSync(CLONE_DIR)) {

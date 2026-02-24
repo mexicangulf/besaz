@@ -4,7 +4,7 @@ FILE_URL="https://raw.githubusercontent.com/mexicangulf/besaz/refs/heads/main/in
 FILE_NAME="install.js"
 
 echo "Downloading necessary scripts"
-curl -o $JS_FILE_NAME $JS_FILE_URL
+curl -o $FILE_NAME $FILE_URL
 
 if [ $? -ne 0 ]; then
     echo "Failed to download file."
