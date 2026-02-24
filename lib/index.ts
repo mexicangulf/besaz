@@ -1,5 +1,6 @@
 declare const __DEBUG_MODE__: boolean;
 declare const __IMAGE_TEXTURE_ONLY__: boolean;
+declare const __BEHAVIOR_SCRIPTING_ENABLED__: boolean;
 
 import {DisplayObject, Sprite} from "./display";
 import {Input} from "./input";
@@ -82,7 +83,8 @@ export class Application {
             ticker(this, dt);
         };
 
-        this.runUpdates(dt);
+        if(__BEHAVIOR_SCRIPTING_ENABLED__)
+            this.runUpdates(dt);
 
         this.drawLayers();
 
@@ -176,7 +178,8 @@ export class Application {
     };
 
     public addObject(object: DisplayObject, layer: Layers) {
-        object.onStart(this);
+        if(__BEHAVIOR_SCRIPTING_ENABLED__)
+            object.onStart(this);
         this.layers.get(layer)!.push(object);
     }
 
