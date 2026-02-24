@@ -2,7 +2,7 @@
 
 set -e
 
-GITHUB_RAW_URL="https://github.com/mexicangulf/besaz"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/mexicangulf/besaz/refs/heads/main/install.js"
 SCRIPT_NAME="install.js"
 
 echo "Downloading necessary scripts"
