@@ -1,6 +1,7 @@
 
 import { execSync } from "child_process";
-import { existsSync, rmSync, readdirSync } from "fs";
+import { existsSync, rmSync, readdirSync, readFileSync, writeFileSync} from "fs";
+import inquirer from "inquirer";
 
 const REPO_URL = "https://github.com/mexicangulf/besaz";
 const CLONE_DIR = "besaz";
@@ -8,16 +9,6 @@ const CLONE_DIR = "besaz";
 function run(cmd, options = {}) {
   console.log(`> ${cmd}`);
   execSync(cmd, { stdio: "inherit", ...options });
-}
-
-async function ensureInquirer() {
-  try {
-    return (await import("inquirer")).default;
-  } catch {
-    console.log("Installing inquirer...");
-    run("npm install inquirer");
-    return (await import("inquirer")).default;
-  }
 }
 
 async function main() {
@@ -33,8 +24,6 @@ async function main() {
 
   console.log("Installing dependencies...");
   run("npm install");
-
-  const inquirer = await ensureInquirer();
 
   console.log("\nFeature Configuration");
   console.log("---------------------");
@@ -71,7 +60,29 @@ async function main() {
   console.log(`Installed package: ${packageFile}`);
 }
 
-main().catch((err) => {
+try {
+main();
+} catch(err) {
   console.error(err);
   process.exit(1);
-});
+} finally {
+    
+  process.chdir(".."); // move out of the cloned folder
+
+  const pkgPath = "./package.json";
+  const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
+
+  pkg.peerDependencies = pkg.peerDependencies || {};
+
+  pkg.peerDependencies["besaz"] = "^1.0.0";
+
+  writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+  console.log("Added besaz as a peerDependency in package.json");
+
+    if (existsSync(CLONE_DIR)) {
+      console.log("\nCleaning up temporary folder...");
+      rmSync(CLONE_DIR, { recursive: true, force: true });
+      console.log("Cleanup complete.");
+    }
+
+};
