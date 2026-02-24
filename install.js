@@ -54,35 +54,36 @@ async function main() {
   const packageFile = tgzFiles[0];
 
   console.log("\nInstalling locally...");
-  run(`npm install "./${packageFile}"`);
+  process.chdir("..");
+  run(`npm install "./${CLONE_DIR}/${packageFile}"`);
 
   console.log("\nBuild complete!");
   console.log(`Installed package: ${packageFile}`);
-}
 
-try {
-main();
-} catch(err) {
-  console.error(err);
-  process.exit(1);
-} finally {
-    
-  process.chdir(".."); // move out of the cloned folder
+  const another = await inquirer.prompt([
+  {
+    type: "confirm",
+    name: "removeBesazFolder",
+    message: "remove the artifact library folder?",
+    default: false,
+  },
+  ]);
 
-  const pkgPath = "./package.json";
-  const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
-
-  pkg.peerDependencies = pkg.peerDependencies || {};
-
-  pkg.peerDependencies["besaz"] = "^1.0.0";
-
-  writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-  console.log("Added besaz as a peerDependency in package.json");
-
+  if(another.removeBesazFolder) {
     if (existsSync(CLONE_DIR)) {
       console.log("\nCleaning up temporary folder...");
       rmSync(CLONE_DIR, { recursive: true, force: true });
       console.log("Cleanup complete.");
     }
+  };
 
-};
+}
+
+try {
+main();
+} catch(err) {
+  
+  console.error(err);
+  process.exit(1);
+
+}
