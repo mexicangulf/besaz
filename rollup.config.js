@@ -2,6 +2,7 @@ import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
+import terser from "@rollup/plugin-terser";
 
 let development = process.env.NODE_ENV === 'development';
 const enableScripting = process.env.ENABLE_SCRIPTING === "true";
@@ -26,7 +27,8 @@ export default [
         __VERSION__: JSON.stringify("1.0.0"),
       }),
       resolve(),
-      typescript({ tsconfig: './tsconfig.json' })
+      typescript({ tsconfig: './tsconfig.json' }),
+      terser(),
     ]
   },
   {
