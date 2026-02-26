@@ -6,6 +6,7 @@ import {DisplayObject, Sprite} from "./display";
 import {Input} from "./input";
 export * from "./display";
 export * from "./script";
+export * from "./vector";
 
 export type Layers = "UI" | "GAME" | "DEBUG";
 
