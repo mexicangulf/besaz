@@ -53,9 +53,9 @@ export class Vec2 {
         return a.add(b.sub(a).mul(t));
     };
 
-    static refleft(a: Vec2, b: Vec2) {
+    // static refleft(a: Vec2, b: Vec2) {
         // To be implemented
-    }
+    // }
 
     public add(b: Vec2) {
         return Vec2.addVectors(this, b);
