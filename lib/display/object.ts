@@ -1,11 +1,10 @@
-import type {Application } from "..";
+import {Vec2, type Application } from "..";
 import {Script, type ProgramType} from "../script";
 
 export abstract class DisplayObject {
 
     public id: string = "";
-    public x: number = 0;
-    public y: number = 0;
+    public pos: Vec2 = Vec2.zero;
     public angle: number = 0;
     public scaleX: number = 1;
     public scaleY: number = 1;
@@ -57,5 +56,13 @@ export abstract class DisplayObject {
     public update = (app: Application, dt: number) => {app;dt};
     public fixedUpdate = (app: Application, dt: number) => {app;dt};
     public onStart = (app: Application) => {app};
+
+    get x() {
+        return this.pos.x;
+    }
+
+    get y() {
+        return this.pos.y;
+    }
 
 };

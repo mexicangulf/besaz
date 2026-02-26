@@ -1,3 +1,4 @@
+import { Vec2 } from "../vector";
 import {DisplayObject} from "./object";
 
 function simple_random_id_genrator() {
@@ -9,8 +10,7 @@ export class Sprite extends DisplayObject {
     public id: string;
     public angle: number = 0;
     public texture: HTMLImageElement;
-    public x: number;
-    public y: number;
+    public pos: Vec2 = Vec2.zero;
 
     constructor(
         x: number,
@@ -23,8 +23,7 @@ export class Sprite extends DisplayObject {
 
         super();
 
-        this.x = x;
-        this.y = y;
+        this.pos = new Vec2(x, y);
 
         this.texture = texture;
 
@@ -44,8 +43,7 @@ export class Sprite extends DisplayObject {
     };
 
     public move(dx: number, dy: number) {
-        this.x += dx;
-        this.y += dy;
+        this.pos = this.pos.add(new Vec2(dx, dy));
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
