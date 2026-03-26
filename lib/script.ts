@@ -7,7 +7,7 @@ export class Script {
 
     public path: string;
     public type: ProgramType;
-    private behaviour: any = undefined;
+    public behaviour: any = undefined;
 
     constructor(path: string, type: ProgramType = "Typescript") {
         
@@ -49,9 +49,9 @@ export class Script {
             this.behaviour.fixedUpdate(app, dt);
     };
 
-    public onStart(app: Application) {
+    public async onStart(app: Application) {
         if(this.behaviour !== undefined)
-            this.behaviour.onStart(app);
+            await this.behaviour.onStart(app);
     };
 
 };

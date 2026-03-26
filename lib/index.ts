@@ -178,14 +178,14 @@ export class Application {
             this.drawArc(x, y, radius, startAngle, endAngle, color, mode);
     };
 
-    public addObject(object: DisplayObject, layer: Layers) {
+    public async addObject(object: DisplayObject, layer: Layers) {
         if(__BEHAVIOR_SCRIPTING_ENABLED__)
-            object.onStart(this);
+            await object.onStart(this);
         this.layers.get(layer)!.push(object);
     }
 
-    public addGameObject(object: DisplayObject) {
-        this.addObject(object, "GAME");
+    public async addGameObject(object: DisplayObject) {
+        await this.addObject(object, "GAME");
         return object;
     }
 

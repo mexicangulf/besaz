@@ -9,7 +9,7 @@ export abstract class DisplayObject {
     public scaleX: number = 1;
     public scaleY: number = 1;
     public visible: boolean = true;
-    private script: Script | undefined = undefined;
+    public script: Script | undefined = undefined;
     // private script;
 
     abstract render(ctx: CanvasRenderingContext2D): void;
@@ -27,8 +27,8 @@ export abstract class DisplayObject {
                 this.script!.fixedUpdate(app, dt);
             }
 
-            this.onStart = (app: Application) => {
-                this.script!.onStart(app);
+            this.onStart = async (app: Application) => {
+                await this.script!.onStart(app);
             }
 
         });
@@ -47,15 +47,15 @@ export abstract class DisplayObject {
             this.script!.fixedUpdate(app, dt);
         };
 
-        this.onStart = (app: Application) => {
-            this.script!.onStart(app);
+        this.onStart = async (app: Application) => {
+            await this.script!.onStart(app);
         }
 
     };
 
     public update = (app: Application, dt: number) => {app;dt};
     public fixedUpdate = (app: Application, dt: number) => {app;dt};
-    public onStart = (app: Application) => {app};
+    public onStart = async (app: Application) => {app};
 
     get x() {
         return this.pos.x;
