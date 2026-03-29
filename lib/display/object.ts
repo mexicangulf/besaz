@@ -3,7 +3,7 @@ import {Script, type ProgramType} from "../script";
 
 export abstract class DisplayObject {
 
-    public id: string = "";
+    public id: string = "NOID";
     public pos: Vec2 = Vec2.zero;
     public angle: number = 0;
     public scaleX: number = 1;

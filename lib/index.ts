@@ -19,6 +19,8 @@ export class Application {
     private ctx: CanvasRenderingContext2D;
     private lastTime: number = 0;
 
+    public ui: any;
+
     private layers: Map<Layers, DisplayObject[]> = new Map();
     private tickers: Ticker[] = [];
 
@@ -188,6 +190,20 @@ export class Application {
         await this.addObject(object, "GAME");
         return object;
     }
+
+    public removeObject(id: string, layer: Layers) {
+        const l = this.layers.get(layer);
+        const idx = l!.findIndex((obj) => obj.id == id);
+        if(idx == -1) {return}
+        this.layers.get(layer)?.splice(idx, 1);
+    };
+
+    public removeGameObject(id: string) {
+        const l = this.layers.get("GAME");
+        const idx = l!.findIndex((obj) => obj.id == id);
+        if(idx == -1) {return}
+        this.layers.get("GAME")!.splice(idx, 1);
+    };
 
     public addUIElement(object: DisplayObject) {
         this.addObject(object, "UI");

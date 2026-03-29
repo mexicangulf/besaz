@@ -34,7 +34,7 @@ export class Sprite extends DisplayObject {
         if(id) 
             this.id = id;
         else
-            this.id = "";
+            this.id = "NOID";
 
     };
 
