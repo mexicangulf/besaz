@@ -3,6 +3,8 @@ import type {DisplayObject} from "./display/object";
 
 export type ProgramType = "Typescript" | "WebAssembly";
 
+export let ModuleCache: Map<string, any> = new Map();
+
 export class Script {
 
     public path: string;
@@ -17,7 +19,17 @@ export class Script {
     };
 
     public async init(sprite: DisplayObject, onload: CallableFunction = () => {}) {
-        if(this.type == "Typescript") { 
+        if(this.type == "Typescript") {
+
+            if(ModuleCache.has(this.path)) {
+                const module = ModuleCache.get(this.path);
+                this.behaviour = module.default(sprite);
+                
+                if(onload)
+                    onload();
+
+                return;
+            };
 
             const name = this.path.split("/").slice(-1);
             const path = this.path.split("/").slice(0, -1).join("/");
@@ -30,8 +42,10 @@ export class Script {
                 module = await import(/* @vite-ignore */ `/behaviour/${name}`);
             }
 
+            ModuleCache.set(this.path, module);
+
             this.behaviour = new module.default(sprite);
-            
+
             if(onload)
                 onload();
             
