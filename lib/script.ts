@@ -23,7 +23,7 @@ export class Script {
 
             if(ModuleCache.has(this.path)) {
                 const module = ModuleCache.get(this.path);
-                this.behaviour = module.default(sprite);
+                this.behaviour = new module.default(sprite);
                 
                 if(onload)
                     onload();
