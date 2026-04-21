@@ -11,6 +11,7 @@ export class Sprite extends DisplayObject {
     public angle: number = 0;
     public texture: HTMLImageElement;
     public pos: Vec2 = Vec2.zero;
+    public imageFilter = "";
 
     constructor(
         x: number,
@@ -60,6 +61,7 @@ export class Sprite extends DisplayObject {
         const w = img.width;
         const h = img.height;
 
+        ctx.filter = this.imageFilter;
         ctx.drawImage(
             img,
             -w*this.scaleX/2,
@@ -67,6 +69,7 @@ export class Sprite extends DisplayObject {
             w*this.scaleX,
             h*this.scaleY
         );
+        ctx.filter = "";
 
         ctx.restore();
 

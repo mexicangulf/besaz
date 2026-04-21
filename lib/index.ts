@@ -4,9 +4,11 @@ declare const __BEHAVIOR_SCRIPTING_ENABLED__: boolean;
 
 import {DisplayObject, Sprite} from "./display";
 import {Input} from "./input";
+import {insertSortedObject} from "./utils";
 export * from "./display";
 export * from "./script";
 export * from "./vector";
+
 
 export type Layers = "UI" | "GAME" | "DEBUG";
 
@@ -18,6 +20,8 @@ export class Application {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private lastTime: number = 0;
+
+    private lastZero = -1;
 
     public ui: any;
 
@@ -180,10 +184,15 @@ export class Application {
             this.drawArc(x, y, radius, startAngle, endAngle, color, mode);
     };
 
-    public async addObjectAsync(object: DisplayObject, layer: Layers) {
+    public async addObjectAsync(object: DisplayObject, layerName: Layers) {
         if(__BEHAVIOR_SCRIPTING_ENABLED__)
             await object.onStart(this);
-        this.layers.get(layer)!.push(object);
+        const layer = this.layers.get(layerName)!
+        if(object.z == 0)
+            layer.splice(++this.lastZero, 0, object);
+        else
+            this.layers.set(layerName, 
+        insertSortedObject(layer, (obj) => obj.z, object));
     }
 
     public async addGameObjectAsync(object: DisplayObject) {
@@ -192,10 +201,16 @@ export class Application {
     }
     
 
-    public addObject(object: DisplayObject, layer: Layers) {
+    public addObject(object: DisplayObject, layerName: Layers) {
         if(__BEHAVIOR_SCRIPTING_ENABLED__)
             object.onStart(this);
-        this.layers.get(layer)!.push(object);
+        const layer = this.layers.get(layerName)!
+        if(object.z == 0)
+            layer.splice(++this.lastZero, 0, object);
+        else
+            this.layers.set(layerName, 
+        insertSortedObject(layer, (obj) => obj.z, object));
+    
     }
 
     public addGameObject(object: DisplayObject) {

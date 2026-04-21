@@ -5,6 +5,7 @@ export abstract class DisplayObject {
 
     public id: string = "NOID";
     public pos: Vec2 = Vec2.zero;
+    public z: number = 0;
     public angle: number = 0;
     public scaleX: number = 1;
     public scaleY: number = 1;
