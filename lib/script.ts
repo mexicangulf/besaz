@@ -92,7 +92,7 @@ export class Script {
             else
                 final = `/behaviour/${name}`;
 
-                import(/* @vite-ignore */ path)
+                import(/* @vite-ignore */ final)
                 .then((module) => {
                     ModuleCache.set(this.path, module);
 
