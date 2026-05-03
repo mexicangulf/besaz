@@ -18,6 +18,23 @@ export class Script {
 
     };
 
+    static async loadModule(modulePath: string) {
+        
+        const name = modulePath.split("/").slice(-1);
+        const path = modulePath.split("/").slice(0, -1).join("/");
+
+        let module;
+
+        if(path) {
+            module = await import(/* @vite-ignore */ `/behaviour/${path}/${name}`);
+        } else {
+            module = await import(/* @vite-ignore */ `/behaviour/${name}`);
+        }
+
+        ModuleCache.set(modulePath, module);
+
+    };
+
     public async init(sprite: DisplayObject, onload: CallableFunction = () => {}) {
         if(this.type == "Typescript") {
 
@@ -49,6 +66,41 @@ export class Script {
             if(onload)
                 onload();
             
+        }
+    };
+
+    public initSync(sprite: DisplayObject, onload: CallableFunction = () => {}) {
+        if(this.type == "Typescript") {
+
+            if(ModuleCache.has(this.path)) {
+                const module = ModuleCache.get(this.path);
+                this.behaviour = new module.default(sprite);
+                
+                if(onload)
+                    onload();
+
+                return;
+            };
+
+            const name = this.path.split("/").slice(-1);
+            const path = this.path.split("/").slice(0, -1).join("/");
+
+            let final = "";
+
+            if(path)
+                final = `/behaviour/${path}/${name}`; 
+            else
+                final = `/behaviour/${name}`;
+
+                import(/* @vite-ignore */ path)
+                .then((module) => {
+                    ModuleCache.set(this.path, module);
+
+                    this.behaviour = new module.default(sprite);
+
+                    if(onload)
+                        onload();
+                });      
         }
     };
 

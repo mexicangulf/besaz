@@ -36,6 +36,27 @@ export abstract class DisplayObject {
 
     };
 
+    public attachScriptSync(path: string, type: ProgramType = "Typescript") {
+
+        this.script = new Script(path, type);
+
+        this.script.initSync(this, () => {
+
+            this.update = (app: Application, dt: number) => {
+                this.script!.update(app, dt);
+            };
+            this.fixedUpdate = (app: Application, dt: number) => {
+                this.script!.fixedUpdate(app, dt);
+            }
+
+            this.onStart = async (app: Application) => {
+                await this.script!.onStart(app);
+            }
+
+        });
+
+    };
+
     public overrideScript(script: Script) {
 
         this.script = script;

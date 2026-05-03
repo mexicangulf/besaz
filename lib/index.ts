@@ -218,6 +218,10 @@ export class Application {
         return object;
     }
 
+    public refreshObjectList(layerName: Layers) {
+        this.layers.get(layerName)!.sort((a, b) => a.z - b.z);
+    }
+
     public removeObject(id: string, layer: Layers) {
         const l = this.layers.get(layer);
         const idx = l!.findIndex((obj) => obj.id == id);
