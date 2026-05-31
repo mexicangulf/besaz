@@ -26,9 +26,9 @@ export class Script {
         let module;
 
         if(path) {
-            module = await import(/* @vite-ignore */ `/behaviour/${path}/${name}`);
+            module = await import(/* @vite-ignore */ `/${path}/${name}`);
         } else {
-            module = await import(/* @vite-ignore */ `/behaviour/${name}`);
+            module = await import(/* @vite-ignore */ `/${name}`);
         }
 
         ModuleCache.set(modulePath, module);
@@ -54,9 +54,9 @@ export class Script {
             let module;
 
             if(path) {
-                module = await import(/* @vite-ignore */ `/behaviour/${path}/${name}`);
+                module = await import(/* @vite-ignore */ `/${path}/${name}`);
             } else {
-                module = await import(/* @vite-ignore */ `/behaviour/${name}`);
+                module = await import(/* @vite-ignore */ `/${name}`);
             }
 
             ModuleCache.set(this.path, module);
