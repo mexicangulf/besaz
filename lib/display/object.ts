@@ -1,5 +1,5 @@
 import {Vec2, type Application } from "..";
-import {Script, type ProgramType} from "../script";
+import {type ProgramType, type BehaviourClass, defualtBehaviourClass} from "../script";
 
 export abstract class DisplayObject {
 
@@ -10,54 +10,58 @@ export abstract class DisplayObject {
     public scaleX: number = 1;
     public scaleY: number = 1;
     public visible: boolean = true;
-    public script: Script | undefined = undefined;
-    // private script;
+    
+    public script: BehaviourClass = new defualtBehaviourClass();
 
     abstract render(ctx: CanvasRenderingContext2D): void;
 
-    public async attachScript(path: string, type: ProgramType = "Typescript") {
+    // public async attachScript(path: string, type: ProgramType = "Typescript") {
 
-        this.script = new Script(path, type);
+    //     this.script = new Script(path, type);
 
-        await this.script.init(this, () => {
+    //     await this.script.init(this, () => {
 
-            this.update = (app: Application, dt: number) => {
-                this.script!.update(app, dt);
-            };
-            this.fixedUpdate = (app: Application, dt: number) => {
-                this.script!.fixedUpdate(app, dt);
-            }
+    //         this.update = (app: Application, dt: number) => {
+    //             this.script!.update(app, dt);
+    //         };
+    //         this.fixedUpdate = (app: Application, dt: number) => {
+    //             this.script!.fixedUpdate(app, dt);
+    //         }
 
-            this.onStart = async (app: Application) => {
-                await this.script!.onStart(app);
-            }
+    //         this.onStart = async (app: Application) => {
+    //             await this.script!.onStart(app);
+    //         }
 
-        });
+    //     });
 
+    // };
+
+    // public attachScriptSync(path: string, type: ProgramType = "Typescript") {
+
+    //     this.script = new Script(path, type);
+
+    //     this.script.initSync(this, () => {
+
+    //         this.update = (app: Application, dt: number) => {
+    //             this.script!.update(app, dt);
+    //         };
+    //         this.fixedUpdate = (app: Application, dt: number) => {
+    //             this.script!.fixedUpdate(app, dt);
+    //         }
+
+    //         this.onStart = async (app: Application) => {
+    //             await this.script!.onStart(app);
+    //         }
+
+    //     });
+
+    // };
+
+    public attachScript(script: BehaviourClass) {
+        this.overrideScript(script);
     };
 
-    public attachScriptSync(path: string, type: ProgramType = "Typescript") {
-
-        this.script = new Script(path, type);
-
-        this.script.initSync(this, () => {
-
-            this.update = (app: Application, dt: number) => {
-                this.script!.update(app, dt);
-            };
-            this.fixedUpdate = (app: Application, dt: number) => {
-                this.script!.fixedUpdate(app, dt);
-            }
-
-            this.onStart = async (app: Application) => {
-                await this.script!.onStart(app);
-            }
-
-        });
-
-    };
-
-    public overrideScript(script: Script) {
+    public overrideScript(script: BehaviourClass) {
 
         this.script = script;
 
@@ -66,7 +70,7 @@ export abstract class DisplayObject {
         };
 
         this.fixedUpdate = (app: Application, dt: number) => {
-            this.script!.fixedUpdate(app, dt);
+            this.script!.updateFixed(app, dt);
         };
 
         this.onStart = async (app: Application) => {

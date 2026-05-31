@@ -1,131 +1,143 @@
 import type {Application} from ".";
-import type {DisplayObject} from "./display/object";
+// import type {DisplayObject} from "./display/object";
 
 export type ProgramType = "Typescript" | "WebAssembly";
 
 export let ModuleCache: Map<string, any> = new Map();
 
-export class Script {
+// export class Script {
 
-    public path: string;
-    public type: ProgramType;
-    public behaviour: any = undefined;
+//     public path: string;
+//     public type: ProgramType;
+//     public behaviour: any = undefined;
 
-    constructor(path: string, type: ProgramType = "Typescript") {
+//     constructor(path: string, type: ProgramType = "Typescript") {
         
-        this.path = path;
-        this.type = type;
+//         this.path = path;
+//         this.type = type;
 
-    };
+//     };
 
-    static async loadModule(modulePath: string) {
+//     static async loadModule(modulePath: string) {
         
-        const name = modulePath.split("/").slice(-1);
-        const path = modulePath.split("/").slice(0, -1).join("/");
+//         const name = modulePath.split("/").slice(-1);
+//         const path = modulePath.split("/").slice(0, -1).join("/");
 
-        let module;
+//         let module;
 
-        if(path) {
-            module = await import(/* @vite-ignore */ `/${path}/${name}`);
-        } else {
-            module = await import(/* @vite-ignore */ `/${name}`);
-        }
+//         if(path) {
+//             module = await import(/* @vite-ignore */ `/${path}/${name}`);
+//         } else {
+//             module = await import(/* @vite-ignore */ `/${name}`);
+//         }
 
-        ModuleCache.set(modulePath, module);
+//         ModuleCache.set(modulePath, module);
 
-    };
+//     };
 
-    public async init(sprite: DisplayObject, onload: CallableFunction = () => {}) {
-        if(this.type == "Typescript") {
+//     public async init(sprite: DisplayObject, onload: CallableFunction = () => {}) {
+//         if(this.type == "Typescript") {
 
-            if(ModuleCache.has(this.path)) {
-                const module = ModuleCache.get(this.path);
-                this.behaviour = new module.default(sprite);
+//             if(ModuleCache.has(this.path)) {
+//                 const module = ModuleCache.get(this.path);
+//                 this.behaviour = new module.default(sprite);
                 
-                if(onload)
-                    onload();
+//                 if(onload)
+//                     onload();
 
-                return;
-            };
+//                 return;
+//             };
 
-            const name = this.path.split("/").slice(-1);
-            const path = this.path.split("/").slice(0, -1).join("/");
+//             const name = this.path.split("/").slice(-1);
+//             const path = this.path.split("/").slice(0, -1).join("/");
 
-            let module;
+//             let module;
 
-            if(path) {
-                module = await import(/* @vite-ignore */ `/${path}/${name}`);
-            } else {
-                module = await import(/* @vite-ignore */ `/${name}`);
-            }
+//             if(path) {
+//                 module = await import(/* @vite-ignore */ `/${path}/${name}`);
+//             } else {
+//                 module = await import(/* @vite-ignore */ `/${name}`);
+//             }
 
-            ModuleCache.set(this.path, module);
+//             ModuleCache.set(this.path, module);
 
-            this.behaviour = new module.default(sprite);
+//             this.behaviour = new module.default(sprite);
 
-            if(onload)
-                onload();
+//             if(onload)
+//                 onload();
             
-        }
-    };
+//         }
+//     };
 
-    public initSync(sprite: DisplayObject, onload: CallableFunction = () => {}) {
-        if(this.type == "Typescript") {
+//     public initSync(sprite: DisplayObject, onload: CallableFunction = () => {}) {
+//         if(this.type == "Typescript") {
 
-            if(ModuleCache.has(this.path)) {
-                const module = ModuleCache.get(this.path);
-                this.behaviour = new module.default(sprite);
+//             if(ModuleCache.has(this.path)) {
+//                 const module = ModuleCache.get(this.path);
+//                 this.behaviour = new module.default(sprite);
                 
-                if(onload)
-                    onload();
+//                 if(onload)
+//                     onload();
 
-                return;
-            };
+//                 return;
+//             };
 
-            const name = this.path.split("/").slice(-1);
-            const path = this.path.split("/").slice(0, -1).join("/");
+//             const name = this.path.split("/").slice(-1);
+//             const path = this.path.split("/").slice(0, -1).join("/");
 
-            let final = "";
+//             let final = "";
 
-            if(path)
-                final = `/behaviour/${path}/${name}`; 
-            else
-                final = `/behaviour/${name}`;
+//             if(path)
+//                 final = `/behaviour/${path}/${name}`; 
+//             else
+//                 final = `/behaviour/${name}`;
 
-                import(/* @vite-ignore */ final)
-                .then((module) => {
-                    ModuleCache.set(this.path, module);
+//                 import(/* @vite-ignore */ final)
+//                 .then((module) => {
+//                     ModuleCache.set(this.path, module);
 
-                    this.behaviour = new module.default(sprite);
+//                     this.behaviour = new module.default(sprite);
 
-                    if(onload)
-                        onload();
-                });      
-        }
-    };
+//                     if(onload)
+//                         onload();
+//                 });      
+//         }
+//     };
 
-    // this is an extra check that i have to get rid of
-    public update(app: Application, dt: number) {
-        if(this.behaviour !== undefined)
-            this.behaviour.update(app, dt);
-    }
+//     // this is an extra check that i have to get rid of
+//     public update(app: Application, dt: number) {
+//         if(this.behaviour !== undefined)
+//             this.behaviour.update(app, dt);
+//     }
 
-    public fixedUpdate(app: Application, dt: number) {
-        if(this.behaviour !== undefined)
-            this.behaviour.fixedUpdate(app, dt);
-    };
+//     public fixedUpdate(app: Application, dt: number) {
+//         if(this.behaviour !== undefined)
+//             this.behaviour.fixedUpdate(app, dt);
+//     };
 
-    public async onStart(app: Application) {
-        if(this.behaviour !== undefined)
-            await this.behaviour.onStart(app);
-    };
+//     public async onStart(app: Application) {
+//         if(this.behaviour !== undefined)
+//             await this.behaviour.onStart(app);
+//     };
 
-};
+// };
 
 export interface BehaviourClass {
 
     update(app: Application, dt: number): void;
     updateFixed(_: Application, dt: number): void;
-    onStart(app: Application): void;
+    onStart(app: Application): Promise<void>;
 
 }
+
+export class defualtBehaviourClass {
+
+    constructor() {};
+    update(_app: Application, _dt: number) {};
+    updateFixed(_app: Application, _dt: number) {};
+    onStart(_app: Application): Promise<void> {
+    return new Promise((resolve , rejct) => {
+        resolve();
+    })};
+
+} 
