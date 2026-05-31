@@ -1,7 +1,7 @@
 import {Vec2, type Application } from "..";
-import {type ProgramType, type BehaviourClass, defualtBehaviourClass} from "../script";
+import {type BehaviourClass, defualtBehaviourClass} from "../script";
 
-export abstract class DisplayObject {
+export abstract class DisplayObject<T extends BehaviourClass = defualtBehaviourClass> {
 
     public id: string = "NOID";
     public pos: Vec2 = Vec2.zero;
@@ -10,8 +10,8 @@ export abstract class DisplayObject {
     public scaleX: number = 1;
     public scaleY: number = 1;
     public visible: boolean = true;
-    
-    public script: BehaviourClass = new defualtBehaviourClass();
+
+    private behaviour: BehaviourClass  = new defualtBehaviourClass();
 
     abstract render(ctx: CanvasRenderingContext2D): void;
 
@@ -57,31 +57,31 @@ export abstract class DisplayObject {
 
     // };
 
-    public attachScript(script: BehaviourClass) {
-        this.overrideScript(script);
+    public attachScript(constructor: new () => T) {
+        this.overrideScript(new constructor());
     };
 
     public overrideScript(script: BehaviourClass) {
 
-        this.script = script;
+        this.behaviour = script;
 
         this.update = (app: Application, dt: number) => {
-            this.script!.update(app, dt);
+            this.behaviour!.update(app, dt);
         };
 
         this.fixedUpdate = (app: Application, dt: number) => {
-            this.script!.updateFixed(app, dt);
+            this.behaviour!.updateFixed(app, dt);
         };
 
-        this.onStart = async (app: Application) => {
-            await this.script!.onStart(app);
+        this.onStart = async (app: Application, object: any) => {
+            await this.behaviour!.onStart(app, object);
         }
 
     };
 
-    public update = (app: Application, dt: number) => {app;dt};
-    public fixedUpdate = (app: Application, dt: number) => {app;dt};
-    public onStart = async (app: Application) => {app};
+    public update = (_app: Application, _dt: number) => {};
+    public fixedUpdate = (_app: Application, _dt: number) => {};
+    public onStart = async (_app: Application, _object: any) => {};
 
     get x() {
         return this.pos.x;
@@ -89,6 +89,10 @@ export abstract class DisplayObject {
 
     get y() {
         return this.pos.y;
+    }
+
+    get script(): T {
+        return (this.behaviour as T);
     }
 
 };

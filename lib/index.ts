@@ -9,7 +9,6 @@ export * from "./display";
 export * from "./script";
 export * from "./vector";
 
-
 export type Layers = "UI" | "GAME" | "DEBUG";
 
 export type Ticker = (app: Application, dt: number) => void;
@@ -186,7 +185,7 @@ export class Application {
 
     public async addObjectAsync(object: DisplayObject, layerName: Layers) {
         if(__BEHAVIOR_SCRIPTING_ENABLED__)
-            await object.onStart(this);
+            await object.onStart(this, object);
         const layer = this.layers.get(layerName)!
         if(object.z == 0)
             layer.splice(++this.lastZero, 0, object);
@@ -203,7 +202,7 @@ export class Application {
 
     public addObject(object: DisplayObject, layerName: Layers) {
         if(__BEHAVIOR_SCRIPTING_ENABLED__)
-            object.onStart(this);
+            object.onStart(this, object);
         const layer = this.layers.get(layerName)!
         if(object.z == 0)
             layer.splice(++this.lastZero, 0, object);

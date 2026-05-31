@@ -126,7 +126,7 @@ export interface BehaviourClass {
 
     update(app: Application, dt: number): void;
     updateFixed(_: Application, dt: number): void;
-    onStart(app: Application): Promise<void>;
+    onStart(app: Application, object: any): any;
 
 }
 
@@ -135,9 +135,6 @@ export class defualtBehaviourClass {
     constructor() {};
     update(_app: Application, _dt: number) {};
     updateFixed(_app: Application, _dt: number) {};
-    onStart(_app: Application): Promise<void> {
-    return new Promise((resolve , rejct) => {
-        resolve();
-    })};
+    onStart(_app: Application, _object: any) {};
 
 } 
