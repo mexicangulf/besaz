@@ -1,6 +1,8 @@
 import {DisplayObject} from "./object";
+import type {BehaviourClass} from "../script";
 
-export class Group extends DisplayObject {
+export class Group<T extends BehaviourClass = BehaviourClass>
+extends DisplayObject<T> {
 
     public children: DisplayObject[] = [];
 

@@ -132,9 +132,9 @@ export interface BehaviourClass {
 
 export class defualtBehaviourClass {
 
-    constructor() {};
+    constructor(_object: any) {};
     update(_app: Application, _dt: number) {};
     updateFixed(_app: Application, _dt: number) {};
-    onStart(_app: Application, _object: any) {};
+    onStart(_app: Application) {};
 
 } 

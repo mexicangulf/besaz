@@ -1,7 +1,7 @@
 import {Vec2, type Application } from "..";
 import {type BehaviourClass, defualtBehaviourClass} from "../script";
 
-export abstract class DisplayObject<T extends BehaviourClass = defualtBehaviourClass> {
+export abstract class DisplayObject<T extends BehaviourClass = BehaviourClass> {
 
     public id: string = "NOID";
     public pos: Vec2 = Vec2.zero;
@@ -11,7 +11,7 @@ export abstract class DisplayObject<T extends BehaviourClass = defualtBehaviourC
     public scaleY: number = 1;
     public visible: boolean = true;
 
-    private behaviour: BehaviourClass  = new defualtBehaviourClass();
+    private behaviour: BehaviourClass  = new defualtBehaviourClass(this);
 
     abstract render(ctx: CanvasRenderingContext2D): void;
 
@@ -57,8 +57,8 @@ export abstract class DisplayObject<T extends BehaviourClass = defualtBehaviourC
 
     // };
 
-    public attachScript(constructor: new () => T) {
-        this.overrideScript(new constructor());
+    public attachScript(constructor: new (_sprite: any) => T) {
+        this.overrideScript(new constructor(this));
     };
 
     public overrideScript(script: BehaviourClass) {

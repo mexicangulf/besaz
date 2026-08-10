@@ -1,3 +1,4 @@
+import type { BehaviourClass} from "../script";
 import {DisplayObject} from "./object";
 
 type DrawCommand = (ctx: CanvasRenderingContext2D) => void;
@@ -6,7 +7,8 @@ type DrawCommand = (ctx: CanvasRenderingContext2D) => void;
 // also this is the only GPT class genrated in this library
 // only beacuse I am running out of time
 // and I can't write like I'm running out of time
-export class Graphics extends DisplayObject {
+export class Graphics<T extends BehaviourClass = BehaviourClass>
+extends DisplayObject<T> {
 
     private commands: DrawCommand[] = [];
 

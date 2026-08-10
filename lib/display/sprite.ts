@@ -1,17 +1,22 @@
 import { Vec2 } from "../vector";
 import {DisplayObject} from "./object";
+import type {BehaviourClass} from "../script";
 
 function simple_random_id_genrator() {
     return `${Math.random()}`.split(".").join("");
 }
 
-export class Sprite extends DisplayObject {
+export class Sprite<T extends BehaviourClass = BehaviourClass>
+ extends DisplayObject<T> {
 
     public id: string;
     public angle: number = 0;
     public texture: HTMLImageElement;
     public pos: Vec2 = Vec2.zero;
     public imageFilter = "";
+
+    public loadingWidth: number;
+    public loadingHeight: number;
 
     constructor(
         x: number,
@@ -20,6 +25,10 @@ export class Sprite extends DisplayObject {
         // I don't want to turn erasble only syntax off
         texture: HTMLImageElement,
         angle?: number,
+
+        loadingWidth: number = 0,
+        loadingHeight: number = 0,
+
         id?: string) {
 
         super();
@@ -31,6 +40,9 @@ export class Sprite extends DisplayObject {
         if(angle) {
             this.angle = angle;
         }
+
+        this.loadingWidth = loadingWidth;
+        this.loadingHeight = loadingHeight;
 
         if(id) 
             this.id = id;
@@ -53,25 +65,31 @@ export class Sprite extends DisplayObject {
 
         if(!img) return;
 
-        ctx.save();
+        try {
+            ctx.save();
 
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle || 0);
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle || 0);
 
-        const w = img.width;
-        const h = img.height;
+            const w = img.width;
+            const h = img.height;
 
-        ctx.filter = this.imageFilter;
-        ctx.drawImage(
-            img,
-            -w*this.scaleX/2,
-            -h*this.scaleY/2,
-            w*this.scaleX,
-            h*this.scaleY
-        );
-        ctx.filter = "";
+            ctx.filter = this.imageFilter;
+            ctx.drawImage(
+                img,
+                -w*this.scaleX/2,
+                -h*this.scaleY/2,
+                w*this.scaleX,
+                h*this.scaleY
+            );
 
-        ctx.restore();
+            ctx.filter = "";
+            ctx.restore();
+
+        } catch(error) {
+            console.log(`rendering sprite failed: `);
+            console.log(error);
+        }
 
     }
 
@@ -91,10 +109,16 @@ export class Sprite extends DisplayObject {
     };
 
     get w() {
+        if(!this.texture) {
+            return this.loadingWidth*this.scaleX;
+        }
         return this.texture.width*this.scaleX;
     }
 
     get h() {
+        if(!this.texture) {
+            return this.loadingHeight*this.scaleY;
+        }
         return this.texture.height*this.scaleY;
     }
 
