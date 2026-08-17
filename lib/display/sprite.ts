@@ -25,11 +25,10 @@ export class Sprite<T extends BehaviourClass = BehaviourClass>
         // I don't want to turn erasble only syntax off
         texture: HTMLImageElement,
         angle?: number,
-
+        id?: string,
         loadingWidth: number = 0,
         loadingHeight: number = 0,
-
-        id?: string) {
+    ) {
 
         super();
 
